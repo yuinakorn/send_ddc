@@ -56,7 +56,7 @@ async def create_token(db: pymysql.connections.Connection = Depends(get_db)):
                 password_hash = row['pass_hash']
                 hoscode = row['hoscode']
 
-                url = f"https://cvp1.moph.go.th/token?Action=get_moph_access_token&user={user}&password_hash={password_hash}&hospital_code={hoscode}"
+                url = f"{config_env['URL_MOPH_GEN_TOKEN']}&user={user}&password_hash={password_hash}&hospital_code={hoscode}"
                 payload = {}
                 headers = {}
 
