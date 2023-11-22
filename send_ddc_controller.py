@@ -92,7 +92,7 @@ async def call_api_send_async(db):
             "user_moph.token " \
             " FROM	ddc_person AS p " \
             "INNER JOIN	ddc_epidem_report AS e	ON p.hoscode = e.hoscode AND p.vn = e.vn AND p.hn = e.hn " \
-            "INNER JOIN	ddc_lab_report AS l	ON e.hoscode = l.hoscode AND e.vn = l.vn AND e.hn = l.hn " \
+            "LEFT JOIN	ddc_lab_report AS l	ON e.hoscode = l.hoscode AND e.vn = l.vn AND e.hn = l.hn " \
             "INNER JOIN user_moph on user_moph.hoscode = p.hoscode and user_moph.active = 1 " \
             "WHERE (p.message_from_ddc <> 'OK' OR p.message_from_ddc IS NULL) " \
 			"AND e.diagnosis_icd10 in ('U071','U072') " \
