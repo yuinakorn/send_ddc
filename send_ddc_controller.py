@@ -206,9 +206,9 @@ async def call_api_send_async(db):
                 json_response = json.loads(response.text)
                 message = json_response['Message']
 
-                sql = "UPDATE ddc1_person " \
+                sql = "UPDATE ddc1_person d " \
                       "SET send_ddc_moph = '1' , message_from_ddc = %s" \
-                      "WHERE ddc_person.hoscode = %s AND ddc_person.vn = %s"
+                      "WHERE d.hoscode = %s AND d.vn = %s"
                 #         not in with
                 cursor.execute(sql, (message, row['hoscode'], row['vn']))
                 db.commit()
