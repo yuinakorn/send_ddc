@@ -69,7 +69,7 @@ async def create_token(db: pymysql.connections.Connection = Depends(get_db)):
     return {"status": "success", "detail": f"insert {row_count} record"}
 
 
-@app.post("/api")
+@app.post("/send_ddc")
 async def send_ddc(db: pymysql.connections.Connection = Depends(get_db)):
     try:
         asyncio.create_task(call_api_send_async(db))
