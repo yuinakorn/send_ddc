@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 
 import pymysql
+import pytz
 import requests
 from dotenv import dotenv_values
 from fastapi import HTTPException
@@ -20,6 +21,11 @@ def replace_none_with_empty_string(data):
 
 
 async def call_api_send_async(db):
+    time = datetime.now()
+    tz = pytz.timezone('Asia/Bangkok')
+    thai_time = time.astimezone(tz)
+    print("Start at: ", thai_time.strftime('%Y-%m-%d %H:%M:%S'))
+
     url = config_env['URL_SEND_DDC']
     query = "SELECT " \
             "p.hoscode, " \
@@ -95,7 +101,7 @@ async def call_api_send_async(db):
             "LEFT JOIN	ddc1_lab_report AS l	ON e.hoscode = l.hoscode AND e.vn = l.vn AND e.hn = l.hn " \
             "INNER JOIN user_moph on user_moph.hoscode = p.hoscode and user_moph.active = 1 " \
             "WHERE (p.message_from_ddc <> 'OK' OR p.message_from_ddc IS NULL) " \
-			"AND e.diagnosis_icd10 in ('U071','U072') " \
+            "AND e.diagnosis_icd10 in ('U071','U072') " \
             " GROUP BY e.hoscode, e.vn, e.hn "
 
     # send_ddc_moph = '0'
@@ -213,8 +219,8 @@ async def call_api_send_async(db):
                 cursor.execute(sql, (message, row['hoscode'], row['vn']))
                 db.commit()
 
-        # print(f"insert {rows_count} record")
-        print("end time = " + datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        print(f"insert {rows_count} record")
+        print("End at: ", thai_time.strftime('%Y-%m-%d %H:%M:%S'))
 
     except MySQLError as e:
         print(e)
