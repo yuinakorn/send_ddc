@@ -31,18 +31,6 @@ def get_db():
         connection.close()
 
 
-@app.post("/api")
-async def send_ddc(db: pymysql.connections.Connection = Depends(get_db)):
-    try:
-        asyncio.create_task(call_api_send_async(db))
-    except requests.RequestException as e:
-        error = f"Error: {e}"
-        print(error)
-        return error
-
-    return {"status": "success", "detail": "api was run in background"}
-
-
 @app.post("/gen_token")
 async def create_token(db: pymysql.connections.Connection = Depends(get_db)):
     sql = "SELECT * FROM user_moph"
@@ -74,12 +62,23 @@ async def create_token(db: pymysql.connections.Connection = Depends(get_db)):
                 row_count = cursor.rowcount
                 print(f"insert {row_count} record")
 
-
     except MySQLError as e:
         print(e)
         raise HTTPException(status_code=500, detail="Database error")
 
     return {"status": "success", "detail": f"insert {row_count} record"}
+
+
+@app.post("/api")
+async def send_ddc(db: pymysql.connections.Connection = Depends(get_db)):
+    try:
+        asyncio.create_task(call_api_send_async(db))
+    except requests.RequestException as e:
+        error = f"Error: {e}"
+        print(error)
+        return error
+
+    return {"status": "success", "detail": "api was run in background"}
 
 
 if __name__ == "__main__":
