@@ -90,14 +90,15 @@ async def call_api_send_async(db):
             "p.message_from_ddc, " \
             "p.send_ddc_moph, " \
             "user_moph.token " \
-            " FROM	ddc_person AS p " \
-            "INNER JOIN	ddc_epidem_report AS e	ON p.hoscode = e.hoscode AND p.vn = e.vn AND p.hn = e.hn " \
-            "LEFT JOIN	ddc_lab_report AS l	ON e.hoscode = l.hoscode AND e.vn = l.vn AND e.hn = l.hn " \
+            " FROM	ddc1_person AS p " \
+            "INNER JOIN	ddc1_epidem_report AS e	ON p.hoscode = e.hoscode AND p.vn = e.vn AND p.hn = e.hn " \
+            "LEFT JOIN	ddc1_lab_report AS l	ON e.hoscode = l.hoscode AND e.vn = l.vn AND e.hn = l.hn " \
             "INNER JOIN user_moph on user_moph.hoscode = p.hoscode and user_moph.active = 1 " \
             "WHERE (p.message_from_ddc <> 'OK' OR p.message_from_ddc IS NULL) " \
 			"AND e.diagnosis_icd10 in ('U071','U072') " \
-			"AND e.hoscode = '10713' " \
             " GROUP BY e.hoscode, e.vn, e.hn "
+
+    # send_ddc_moph = '0'
 
     try:
         with db.cursor(pymysql.cursors.DictCursor) as cursor:
@@ -205,7 +206,7 @@ async def call_api_send_async(db):
                 json_response = json.loads(response.text)
                 message = json_response['Message']
 
-                sql = "UPDATE ddc_person " \
+                sql = "UPDATE ddc1_person " \
                       "SET send_ddc_moph = '1' , message_from_ddc = %s" \
                       "WHERE ddc_person.hoscode = %s AND ddc_person.vn = %s"
                 #         not in with
