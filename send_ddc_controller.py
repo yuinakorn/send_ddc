@@ -219,7 +219,8 @@ async def call_api_send_async(db):
                 cursor.execute(sql, (message, row['hoscode'], row['vn']))
                 db.commit()
 
-        print(f"insert {rows_count} record")
+            print(cursor.rowcount, "record inserted.")
+
         print("End at: ", thai_time.strftime('%Y-%m-%d %H:%M:%S'))
 
     except MySQLError as e:
