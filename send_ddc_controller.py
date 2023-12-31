@@ -110,7 +110,7 @@ async def call_api_send_async(db):
         with db.cursor(pymysql.cursors.DictCursor) as cursor:
             cursor.execute(query)
             results = cursor.fetchall()
-
+            rows = 0
             # datetime now
             print("start time = " + datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
@@ -218,8 +218,9 @@ async def call_api_send_async(db):
                 #         not in with
                 cursor.execute(sql, (message, row['hoscode'], row['vn']))
                 db.commit()
+                rows += cursor.rowcount
 
-            print(cursor.rowcount, "record inserted.")
+            print(rows, "record inserted.")
 
         print("End at: ", thai_time.strftime('%Y-%m-%d %H:%M:%S'))
 
