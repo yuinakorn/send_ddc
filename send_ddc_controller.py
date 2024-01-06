@@ -101,9 +101,9 @@ async def call_api_send_async(db):
             "LEFT JOIN	ddc1_lab_report AS l	ON e.hoscode = l.hoscode AND e.vn = l.vn AND e.hn = l.hn " \
             "INNER JOIN user_moph on user_moph.hoscode = p.hoscode and user_moph.active = 1 " \
             "WHERE (p.message_from_ddc <> 'OK' OR p.message_from_ddc IS NULL) " \
-            "AND e.diagnosis_icd10 in ('U071','U072') " \
             " GROUP BY e.hoscode, e.vn, e.hn "
 
+    # "AND e.diagnosis_icd10 in ('U071','U072') " \
     # send_ddc_moph = '0'
 
     try:
