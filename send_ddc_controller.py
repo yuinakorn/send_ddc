@@ -98,7 +98,7 @@ async def call_api_send_async(db):
             "user_moph.token " \
             " FROM	ddc1_person AS p " \
             "INNER JOIN	ddc1_epidem_report AS e	ON p.hoscode = e.hoscode AND p.vn = e.vn AND p.hn = e.hn " \
-            "LEFT JOIN	ddc1_lab_report AS l	ON e.hoscode = l.hoscode AND e.vn = l.vn AND e.hn = l.hn " \
+            "LEFT JOIN	ddc1_lab_report AS l ON e.hoscode = l.hoscode AND e.vn = l.vn AND e.hn = l.hn " \
             "INNER JOIN user_moph on user_moph.hoscode = p.hoscode and user_moph.active = 1 " \
             "WHERE (p.message_from_ddc <> 'OK' OR p.message_from_ddc IS NULL) " \
             " GROUP BY e.hoscode, e.vn, e.hn "
@@ -148,7 +148,7 @@ async def call_api_send_async(db):
                     },
                     "epidem_report": {
                         "epidem_report_guid": row['epidem_report_guid'],
-                        "epidem_report_group_code": row['epidem_report_group_code'],
+                        "epidem_report_group_id": row['epidem_report_group_id'],
                         "treated_hospital_code": row['treated_hospital_code'],
                         "report_datetime": row['report_datetime'],
                         "onset_date": row['onset_date'],
