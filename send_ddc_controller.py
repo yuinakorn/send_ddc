@@ -217,15 +217,13 @@ async def call_api_send_async(db):
 
                 cursor.execute(sql, (message, thai_time.strftime('%Y-%m-%d %H:%M:%S'), row['hoscode'], row['vn']))
                 try:
-                    if db.commit():
-                        rows += cursor.rowcount
-                        print("this is rowcount = " + str(rows))
-                        print(rows, "record inserted.")
-                    else:
-                        print("error commit insert")
+                    db.commit()
+                    rows += cursor.rowcount
+                    print("this is rowcount =", rows)
+                    print(rows, "record updated.")
                 except MySQLError as e:
-                    print(e)
-                    raise HTTPException(status_code=500, detail="Database error")
+                    print("Database Error: ", e)
+                    db.rollback()  # Rollback the transaction in case of an error
 
         print("End at: ", thai_time.strftime('%Y-%m-%d %H:%M:%S'))
 
