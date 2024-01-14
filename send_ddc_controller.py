@@ -148,7 +148,7 @@ async def call_api_send_async(db):
                     },
                     "epidem_report": {
                         "epidem_report_guid": row['epidem_report_guid'],
-                        "epidem_report_group_id": row['epidem_report_group_id'],
+                        "epidem_report_group_code": row['epidem_report_group_id'],
                         "treated_hospital_code": row['treated_hospital_code'],
                         "report_datetime": row['report_datetime'],
                         "onset_date": row['onset_date'],
