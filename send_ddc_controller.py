@@ -211,12 +211,13 @@ async def call_api_send_async(db):
 
                 json_response = json.loads(response.text)
                 message = json_response['Message']
+                message_code = json_response['MessageCode']
 
                 sql = "UPDATE ddc_final_person d " \
-                      "SET send_ddc_moph = '1', message_from_ddc = %s, d_update = %s " \
+                      "SET send_ddc_moph = '1', message_from_ddc = %s, message_code = %s, d_update = %s " \
                       "WHERE d.hoscode = %s AND d.vn = %s"
 
-                cursor.execute(sql, (message, thai_time.strftime('%Y-%m-%d %H:%M:%S'), row['hoscode'], row['vn']))
+                cursor.execute(sql, (message, message_code, thai_time.strftime('%Y-%m-%d %H:%M:%S'), row['hoscode'], row['vn']))
                 try:
                     db.commit()
                     rows += cursor.rowcount
