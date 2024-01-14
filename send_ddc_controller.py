@@ -212,8 +212,8 @@ async def call_api_send_async(db):
                 message = json_response['Message']
 
                 sql = "UPDATE ddc_final_person d " \
-                      "SET send_ddc_moph = '1' , message_from_ddc = %s" \
-                      "WHERE d.hoscode = %s AND d.vn = %s AND d.d_update = %s"
+                      "SET send_ddc_moph = '1' , message_from_ddc = %s, d_update = %s" \
+                      "WHERE d.hoscode = %s AND d.vn = %s"
                 #         not in with
                 cursor.execute(sql, (message, row['hoscode'], row['vn'], thai_time.strftime('%Y-%m-%d %H:%M:%S')))
                 try:
