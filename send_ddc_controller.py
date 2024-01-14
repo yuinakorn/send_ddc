@@ -96,9 +96,9 @@ async def call_api_send_async(db):
             "p.message_from_ddc, " \
             "p.send_ddc_moph, " \
             "user_moph.token " \
-            " FROM	ddc1_person AS p " \
-            "INNER JOIN	ddc1_epidem_report AS e	ON p.hoscode = e.hoscode AND p.vn = e.vn AND p.hn = e.hn " \
-            "LEFT JOIN	ddc1_lab_report AS l ON e.hoscode = l.hoscode AND e.vn = l.vn AND e.hn = l.hn " \
+            " FROM	ddc_final_person AS p " \
+            "INNER JOIN	ddc_final_epidem_report AS e	ON p.hoscode = e.hoscode AND p.vn = e.vn AND p.hn = e.hn " \
+            "LEFT JOIN	ddc_final_lab_report AS l ON e.hoscode = l.hoscode AND e.vn = l.vn AND e.hn = l.hn " \
             "INNER JOIN user_moph on user_moph.hoscode = p.hoscode and user_moph.active = 1 " \
             "WHERE (p.message_from_ddc <> 'OK' OR p.message_from_ddc IS NULL) " \
             " GROUP BY e.hoscode, e.vn, e.hn "
@@ -206,17 +206,16 @@ async def call_api_send_async(db):
                 # print("this is payload = " + json.dumps(modified_json_data))
 
                 # all_json_data.append(modified_json_data)
-                rows_count = cursor.rowcount
                 print(response.text)
 
                 json_response = json.loads(response.text)
                 message = json_response['Message']
 
-                sql = "UPDATE ddc1_person d " \
+                sql = "UPDATE ddc_final_person d " \
                       "SET send_ddc_moph = '1' , message_from_ddc = %s" \
-                      "WHERE d.hoscode = %s AND d.vn = %s"
+                      "WHERE d.hoscode = %s AND d.vn = %s AND d.d_update = %s"
                 #         not in with
-                cursor.execute(sql, (message, row['hoscode'], row['vn']))
+                cursor.execute(sql, (message, row['hoscode'], row['vn'], thai_time.strftime('%Y-%m-%d %H:%M:%S')))
                 db.commit()
                 rows += cursor.rowcount
 
