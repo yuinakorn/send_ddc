@@ -117,7 +117,7 @@ async def call_api_send_async(db):
             for row in results:
                 # Assuming 'birth_date' is the column containing datetime objects
                 # row['birth_date'] = row['birth_date'].strftime('%Y-%m-%d')
-                row['birth_date'] = row['birth_date'].strftime('%Y-%m-%d') if row['birth_date'] is not None else None
+                # row['birth_date'] = row['birth_date'].strftime('%Y-%m-%d') if row['birth_date'] is not None else None
 
                 json_data = {
                     "hospital": {
