@@ -2,6 +2,7 @@ def select_sql_by_option(choice: str):
     query = ""
     if choice == '0':
         #     ส่งทั้งหมดที่ยังไม่ ok รวมส่งซ้ำที่ error
+        print("Your choice is 0: to send all data")
         query = "SELECT " \
                 "p.hoscode, " \
                 "p.hosname, " \
@@ -74,12 +75,13 @@ def select_sql_by_option(choice: str):
                 " FROM	ddc_final_person AS p " \
                 "INNER JOIN	ddc_final_epidem_report AS e ON p.hoscode = e.hoscode AND p.vn = e.vn AND p.hn = e.hn " \
                 "LEFT JOIN	ddc_final_lab_report AS l ON e.hoscode = l.hoscode AND e.vn = l.vn AND e.hn = l.hn " \
-                "INNER JOIN user_moph on user_moph.hoscode = p.hoscode and user_moph.active = 1 " \
+                "INNER JOIN user_moph on user_moph.hoscode = p.hoscode and user_moph.active = 1 AND left(user_moph.token,1) <> '{' " \
                 "WHERE (p.message_from_ddc <> 'OK' OR p.message_from_ddc IS NULL) " \
                 " GROUP BY e.hoscode, e.vn, e.hn "
 
     elif choice == '1':
         #     ส่งทั้งหมดที่ยังไม่ได้ส่ง ไม่ส่งซ้ำที่ error
+        print("Your choice is 1: to send all data that not send yet")
         query = "SELECT " \
                 "p.hoscode, " \
                 "p.hosname, " \
@@ -152,7 +154,7 @@ def select_sql_by_option(choice: str):
                 " FROM	ddc_final_person AS p " \
                 "INNER JOIN	ddc_final_epidem_report AS e ON p.hoscode = e.hoscode AND p.vn = e.vn AND p.hn = e.hn " \
                 "LEFT JOIN	ddc_final_lab_report AS l ON e.hoscode = l.hoscode AND e.vn = l.vn AND e.hn = l.hn " \
-                "INNER JOIN user_moph on user_moph.hoscode = p.hoscode and user_moph.active = 1 " \
+                "INNER JOIN user_moph on user_moph.hoscode = p.hoscode and user_moph.active = 1 AND left(user_moph.token,1) <> '{' " \
                 "WHERE (p.send_ddc_moph <> '1' OR p.message_from_ddc IS NULL) " \
                 " GROUP BY e.hoscode, e.vn, e.hn "
 
