@@ -52,7 +52,7 @@ async def call_api_send_async(db):
             "p.mobile_phone, " \
             "p.occupation, " \
             "e.epidem_report_guid, " \
-            "e.epidem_report_group_code, " \
+            "e.epidem_report_group_id, " \
             "p.hoscode as treated_hospital_code, " \
             "e.report_datetime, " \
             "e.onset_date, " \
