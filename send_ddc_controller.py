@@ -216,13 +216,16 @@ async def call_api_send_async(db):
                       "WHERE d.hoscode = %s AND d.vn = %s AND d.d_update = %s"
                 #         not in with
                 cursor.execute(sql, (message, row['hoscode'], row['vn'], thai_time.strftime('%Y-%m-%d %H:%M:%S')))
-
-                if db.commit():
-                    rows += cursor.rowcount
-                    print("this is rowcount = " + str(rows))
-                    print(rows, "record inserted.")
-                else:
-                    print("Error insert: %s" % db.error)
+                try:
+                    if db.commit():
+                        rows += cursor.rowcount
+                        print("this is rowcount = " + str(rows))
+                        print(rows, "record inserted.")
+                    else:
+                        print("error commit insert")
+                except MySQLError as e:
+                    print(e)
+                    raise HTTPException(status_code=500, detail="Database error")
 
         print("End at: ", thai_time.strftime('%Y-%m-%d %H:%M:%S'))
 
