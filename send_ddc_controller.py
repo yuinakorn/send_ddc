@@ -8,6 +8,8 @@ from dotenv import dotenv_values
 from fastapi import HTTPException
 from pymysql import MySQLError
 
+from send_option_controller import select_sql_by_option
+
 config_env = dotenv_values(".env")
 
 
@@ -20,88 +22,17 @@ def replace_none_with_empty_string(data):
         return data if data is not None else ""
 
 
-async def call_api_send_async(db):
+async def call_api_send_async(db, option):
+
     time = datetime.now()
     tz = pytz.timezone('Asia/Bangkok')
     thai_time = time.astimezone(tz)
     print("Start at: ", thai_time.strftime('%Y-%m-%d %H:%M:%S'))
 
     url = config_env['URL_SEND_DDC']
-    query = "SELECT " \
-            "p.hoscode, " \
-            "p.hosname, " \
-            "p.vn, " \
-            "p.cid, " \
-            "p.passport_no, " \
-            "p.prefix, " \
-            "p.first_name, " \
-            "p.last_name, " \
-            "p.nationality, " \
-            "p.gender, " \
-            "p.birth_date, " \
-            "p.age_y, " \
-            "p.age_m, " \
-            "p.age_d, " \
-            "p.marital_status_id, " \
-            "p.address, " \
-            "p.moo, " \
-            "p.road, " \
-            "p.chw_code, " \
-            "p.amp_code, " \
-            "p.tmb_code, " \
-            "p.mobile_phone, " \
-            "p.occupation, " \
-            "e.epidem_report_guid, " \
-            "e.epidem_report_group_id, " \
-            "p.hoscode as treated_hospital_code, " \
-            "e.report_datetime, " \
-            "e.onset_date, " \
-            "e.treated_date, " \
-            "e.diagnosis_date, " \
-            "e.death_date, " \
-            "e.Cdeath, " \
-            "e.informer_name, " \
-            "e.diagnosis_icd10, " \
-            "e.diagnosis_icd10_list, " \
-            "e.organism, " \
-            "e.complication, " \
-            "e.epidem_person_status_id, " \
-            "e.epidem_symptom_type_id, " \
-            "e.respirator_status, " \
-            "e.vaccinated_status, " \
-            "'3' as municipal,  " \
-            "e.epidem_address, " \
-            "e.epidem_moo, " \
-            "e.epidem_road, " \
-            "e.epidem_chw_code, " \
-            "e.epidem_amp_code, " \
-            "e.epidem_tmb_code, " \
-            "e.location_gis_latitude, " \
-            "e.location_gis_longitude, " \
-            "'50' as isolate_chw_code, " \
-            "e.patient_type, " \
-            "e.active_case_finding, " \
-            "e.epidem_cluster_type_id, " \
-            "e.cluster_latitude, " \
-            "e.cluster_longitude, " \
-            "e.`comment`, " \
-            "l.epidem_lab_confirm_type_id, " \
-            "l.lab_report_date, " \
-            "l.lab_report_result, " \
-            "l.specimen_date, " \
-            "l.specimen_place_id, " \
-            "l.lab_his_ref_code, " \
-            "l.lab_his_ref_name, " \
-            "l.tmlt_code ," \
-            "p.message_from_ddc, " \
-            "p.send_ddc_moph, " \
-            "user_moph.token " \
-            " FROM	ddc_final_person AS p " \
-            "INNER JOIN	ddc_final_epidem_report AS e	ON p.hoscode = e.hoscode AND p.vn = e.vn AND p.hn = e.hn " \
-            "LEFT JOIN	ddc_final_lab_report AS l ON e.hoscode = l.hoscode AND e.vn = l.vn AND e.hn = l.hn " \
-            "INNER JOIN user_moph on user_moph.hoscode = p.hoscode and user_moph.active = 1 " \
-            "WHERE (p.message_from_ddc <> 'OK' OR p.message_from_ddc IS NULL) " \
-            " GROUP BY e.hoscode, e.vn, e.hn "
+
+    # ไปเอาคิวรี่ที่ option
+    query = select_sql_by_option(option)
 
     # "AND e.diagnosis_icd10 in ('U071','U072') " \
     # send_ddc_moph = '0'
@@ -217,7 +148,8 @@ async def call_api_send_async(db):
                       "SET send_ddc_moph = '1', message_from_ddc = %s, message_code = %s, d_update = %s " \
                       "WHERE d.hoscode = %s AND d.vn = %s"
 
-                cursor.execute(sql, (message, message_code, thai_time.strftime('%Y-%m-%d %H:%M:%S'), row['hoscode'], row['vn']))
+                cursor.execute(sql, (
+                    message, message_code, thai_time.strftime('%Y-%m-%d %H:%M:%S'), row['hoscode'], row['vn']))
                 try:
                     db.commit()
                     rows += cursor.rowcount
