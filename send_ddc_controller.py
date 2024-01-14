@@ -212,7 +212,7 @@ async def call_api_send_async(db):
                 message = json_response['Message']
 
                 sql = "UPDATE ddc_final_person d " \
-                      "SET send_ddc_moph = '1' , message_from_ddc = %s, d_update = %s" \
+                      "SET send_ddc_moph = '1' , message_from_ddc = %s, d_update = %s " \
                       "WHERE d.hoscode = %s AND d.vn = %s"
                 #         not in with
                 cursor.execute(sql, (message, thai_time.strftime('%Y-%m-%d %H:%M:%S'), row['hoscode'], row['vn']))
@@ -225,7 +225,6 @@ async def call_api_send_async(db):
                         print("error commit insert")
                 except MySQLError as e:
                     print(e)
-                    raise HTTPException(status_code=500, detail="Database error")
 
         print("End at: ", thai_time.strftime('%Y-%m-%d %H:%M:%S'))
 
