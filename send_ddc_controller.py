@@ -215,6 +215,7 @@ async def call_api_send_async(db):
                       "SET send_ddc_moph = '1' , message_from_ddc = %s, d_update = %s " \
                       "WHERE d.hoscode = %s AND d.vn = %s"
                 #         not in with
+                print("thai time: ", thai_time.strftime('%Y-%m-%d %H:%M:%S'))
                 cursor.execute(sql, (message, thai_time.strftime('%Y-%m-%d %H:%M:%S'), row['hoscode'], row['vn']))
                 try:
                     if db.commit():
