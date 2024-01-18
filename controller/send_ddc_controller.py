@@ -10,7 +10,7 @@ from pymysql import MySQLError
 
 from send_option_controller import select_sql_by_option
 
-config_env = dotenv_values(".env")
+config_env = dotenv_values("../.env")
 
 
 def replace_none_with_empty_string(data):

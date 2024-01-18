@@ -1,13 +1,12 @@
 import requests
-import json
 from fastapi import FastAPI, Depends, HTTPException
 import pymysql
 from pymysql import MySQLError
-from fastapi.responses import JSONResponse
 from dotenv import dotenv_values
-import uuid
 import asyncio
-from send_ddc_controller import call_api_send_async
+
+from controller.transfer_nkp_controller import toggle_process
+from controller.send_ddc_controller import call_api_send_async
 
 config_env = dotenv_values(".env")
 
@@ -84,3 +83,8 @@ async def send_ddc(db: pymysql.connections.Connection = Depends(get_db), option:
 if __name__ == "__main__":
     asyncio.run(send_ddc())
     print("Main program continues executing...")
+
+
+@app.post("/sent_to_cmpho/{option}")
+async def sent_to_cmpho(option: str):
+    return toggle_process(option)
