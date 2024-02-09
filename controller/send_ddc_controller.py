@@ -25,14 +25,13 @@ def replace_none_with_empty_string(data):
 
 
 async def call_api_send_async(db, option):
-
     time = datetime.now()
     tz = pytz.timezone('Asia/Bangkok')
     thai_time = time.astimezone(tz)
     print("Start at: ", thai_time.strftime('%Y-%m-%d %H:%M:%S'))
 
-    # url = config_env['URL_SEND_DDC']
-    url = 'https://epidemcenter.moph.go.th/epidem506/api/Send506'
+    url = config_env['URL_SEND_DDC']
+    print("url: " + url)
 
     # ไปเอาคิวรี่ที่ option
     query = select_sql_by_option(option)
@@ -67,7 +66,7 @@ async def call_api_send_async(db, option):
                         "last_name": row['last_name'],
                         "nationality": row['nationality'],
                         "gender": row['gender'],
-                        "birth_date": row['birth_date'],
+                        "birth_date": row['birth_date'][0:10] if row['birth_date'] is not None else '0000-00-00',
                         "age_y": row['age_y'],
                         "age_m": row['age_m'],
                         "age_d": row['age_d'],
@@ -85,11 +84,11 @@ async def call_api_send_async(db, option):
                         "epidem_report_guid": row['epidem_report_guid'],
                         "epidem_report_group_code": row['epidem_report_group_id'],
                         "treated_hospital_code": row['treated_hospital_code'],
-                        "report_datetime": row['report_datetime'],
-                        "onset_date": row['onset_date'],
-                        "treated_date": row['treated_date'],
-                        "diagnosis_date": row['diagnosis_date'],
-                        "death_date": row["death_date"],
+                        "report_datetime": row['report_datetime'][:10] if row['report_datetime'] is not None else '0000-00-00',
+                        "onset_date": row['onset_date'][:10] if row['onset_date'] is not None else '0000-00-00',
+                        "treated_date": row['treated_date'][:10] if row['treated_date'] is not None else '0000-00-00',
+                        "diagnosis_date": row['diagnosis_date'][:10] if row['diagnosis_date'] is not None else '0000-00-00',
+                        "death_date": row["death_date"][:10] if row["death_date"] is not None else '0000-00-00',
                         "organism": row["organism"],
                         "complication": row["complication"],
                         "cdeath": row["Cdeath"],
@@ -119,10 +118,10 @@ async def call_api_send_async(db, option):
                     },
                     "lab_report": {
                         "epidem_lab_confirm_type_id": row["epidem_lab_confirm_type_id"],
-                        "specimen_date": row["specimen_date"],
+                        "specimen_date": row["specimen_date"][:10] if row["specimen_date"] is not None else '0000-00-00',
                         "specimen_place_id": row["specimen_place_id"],
                         # short if
-                        "lab_report_date": row["lab_report_date"],
+                        "lab_report_date": row["lab_report_date"][:10] if row["lab_report_date"] is not None else '0000-00-00',
                         "lab_report_result": row["lab_report_result"],
                         "lab_his_ref_code": row["lab_his_ref_code"],
                         "lab_his_ref_name": row["lab_his_ref_name"],
@@ -135,17 +134,16 @@ async def call_api_send_async(db, option):
                     'Authorization': 'Bearer ' + row['token']
                 }
 
-                # print(json_data)
-                # print("this is json_data = " + json_data)
+                # convert json_data to json and encode to utf-8
+                # print(json.dumps(json_data, default=str))
 
                 modified_json_data = replace_none_with_empty_string(json_data)
                 # print("this is payload = " + json.dumps(modified_json_data))
-                # response = requests.request("POST", url, headers=headers, data=json.dumps(modified_json_data))
-                response = requests.request("POST", url, headers=headers, data=modified_json_data)
+                response = requests.request("POST", url, headers=headers, data=json.dumps(modified_json_data))
                 # print("this is payload = " + json.dumps(modified_json_data))
 
                 # all_json_data.append(modified_json_data)
-                print(response.text)
+                # print(response.text)
 
                 json_response = json.loads(response.text)
                 message = json_response['Message']
