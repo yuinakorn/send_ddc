@@ -31,8 +31,8 @@ async def call_api_send_async(db, option):
     thai_time = time.astimezone(tz)
     print("Start at: ", thai_time.strftime('%Y-%m-%d %H:%M:%S'))
 
-    # url = config_env['URL_SEND_DDC']
-    url = 'https://epidemcenter.moph.go.th/epidem506/api/Send506'
+    url = config_env['URL_SEND_DDC']
+    # url = 'https://epidemcenter.moph.go.th/epidem506/api/Send506'
 
     # ไปเอาคิวรี่ที่ option
     query = select_sql_by_option(option)
@@ -135,9 +135,13 @@ async def call_api_send_async(db, option):
                     'Authorization': 'Bearer ' + row['token']
                 }
 
+                # print(json_data)
+                # print("this is json_data = " + json_data)
+
                 modified_json_data = replace_none_with_empty_string(json_data)
                 # print("this is payload = " + json.dumps(modified_json_data))
-                response = requests.request("POST", url, headers=headers, data=json.dumps(modified_json_data))
+                # response = requests.request("POST", url, headers=headers, data=json.dumps(modified_json_data))
+                response = requests.request("POST", url, headers=headers, data=modified_json_data)
                 # print("this is payload = " + json.dumps(modified_json_data))
 
                 # all_json_data.append(modified_json_data)
