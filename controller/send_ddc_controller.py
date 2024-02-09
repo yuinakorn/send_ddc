@@ -138,7 +138,7 @@ async def call_api_send_async(db, option):
                 # print(json.dumps(json_data, default=str))
 
                 modified_json_data = replace_none_with_empty_string(json_data)
-                print(modified_json_data)
+                # print(modified_json_data)
 
                 # print("this is payload = " + json.dumps(modified_json_data))
                 response = requests.request("POST", url, headers=headers, data=json.dumps(modified_json_data))
@@ -148,6 +148,7 @@ async def call_api_send_async(db, option):
                 # print(response.text)
 
                 json_response = json.loads(response.text)
+                print(json_response)
                 message = json_response['Message']
                 message_code = json_response['MessageCode']
 
