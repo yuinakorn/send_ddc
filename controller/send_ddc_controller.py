@@ -31,7 +31,8 @@ async def call_api_send_async(db, option):
     thai_time = time.astimezone(tz)
     print("Start at: ", thai_time.strftime('%Y-%m-%d %H:%M:%S'))
 
-    url = config_env['URL_SEND_DDC']
+    # url = config_env['URL_SEND_DDC']
+    url = 'https://epidemcenter.moph.go.th/epidem506/api/Send506'
 
     # ไปเอาคิวรี่ที่ option
     query = select_sql_by_option(option)
