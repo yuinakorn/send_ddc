@@ -12,7 +12,7 @@ from controller.send_option_controller import select_sql_by_option
 
 # from send_option_controller import select_sql_by_option
 
-config_env = dotenv_values("../.env")
+config_env = dotenv_values(".env")
 
 
 def replace_none_with_empty_string(data):
@@ -31,8 +31,8 @@ async def call_api_send_async(db, option):
     thai_time = time.astimezone(tz)
     print("Start at: ", thai_time.strftime('%Y-%m-%d %H:%M:%S'))
 
-    url = config_env['URL_SEND_DDC']
-    # url = 'https://epidemcenter.moph.go.th/epidem506/api/Send506'
+    # url = config_env['URL_SEND_DDC']
+    url = 'https://epidemcenter.moph.go.th/epidem506/api/Send506'
 
     # ไปเอาคิวรี่ที่ option
     query = select_sql_by_option(option)
