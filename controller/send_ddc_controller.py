@@ -66,7 +66,7 @@ async def call_api_send_async(db, option):
                         "last_name": row['last_name'],
                         "nationality": row['nationality'],
                         "gender": row['gender'],
-                        "birth_date": row['birth_date'][0:10] if row['birth_date'] is not None else '0000-00-00',
+                        "birth_date": str(row['birth_date'])[:10] if row['birth_date'] is not None else '0000-00-00',
                         "age_y": row['age_y'],
                         "age_m": row['age_m'],
                         "age_d": row['age_d'],
@@ -138,6 +138,8 @@ async def call_api_send_async(db, option):
                 # print(json.dumps(json_data, default=str))
 
                 modified_json_data = replace_none_with_empty_string(json_data)
+                print(modified_json_data)
+
                 # print("this is payload = " + json.dumps(modified_json_data))
                 response = requests.request("POST", url, headers=headers, data=json.dumps(modified_json_data))
                 # print("this is payload = " + json.dumps(modified_json_data))
