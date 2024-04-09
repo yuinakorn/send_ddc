@@ -101,14 +101,14 @@ def transfer_table(source_tables, destination_tables):
 
                 try:
                     # Flatten the chunk list to pass as a single parameter to executemany
-                    flat_chunk = [value for row in chunk for value in row]
-                    destination_cursor.executemany(query, [flat_chunk])
+                    # flat_chunk = [value for row in chunk for value in row]
+                    # destination_cursor.executemany(query, [flat_chunk])
+                    # คำสั่งนี้สั้นกว่า
+                    destination_cursor.execute(query, tuple([value for row in chunk for value in row]))
+
 
                 except Exception as e:
                     print(f"Error: {e}")
-
-                finally:
-                    destination_conn.rollback()
 
                 pbar.update(len(chunk))
 

@@ -1,5 +1,5 @@
 import requests
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Query
 import pymysql
 from pymysql import MySQLError
 from dotenv import dotenv_values
@@ -69,9 +69,9 @@ async def create_token(db: pymysql.connections.Connection = Depends(get_db)):
 
 
 @app.post("/send_ddc/{option}")
-async def send_ddc(db: pymysql.connections.Connection = Depends(get_db), option: str = "0"):
+async def send_ddc(db: pymysql.connections.Connection = Depends(get_db), option: str = "0", hoscode: str = Query(None)):
     try:
-        asyncio.create_task(call_api_send_async(db, option))
+        asyncio.create_task(call_api_send_async(db, option, hoscode))
     except requests.RequestException as e:
         error = f"Error: {e}"
         print(error)

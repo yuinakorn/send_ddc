@@ -24,7 +24,7 @@ def replace_none_with_empty_string(data):
         return data if data is not None else ""
 
 
-async def call_api_send_async(db, option):
+async def call_api_send_async(db, option, hoscode):
     time = datetime.now()
     tz = pytz.timezone('Asia/Bangkok')
     thai_time = time.astimezone(tz)
@@ -34,7 +34,7 @@ async def call_api_send_async(db, option):
     print("url: " + url)
 
     # ไปเอาคิวรี่ที่ option
-    query = select_sql_by_option(option)
+    query = select_sql_by_option(option, hoscode)
 
     # "AND e.diagnosis_icd10 in ('U071','U072') " \
     # send_ddc_moph = '0'
